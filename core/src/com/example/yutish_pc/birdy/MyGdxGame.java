@@ -19,6 +19,8 @@ public class MyGdxGame extends ApplicationAdapter {
     Texture background;
     //ShapeRenderer shapeRenderer;
 
+    Texture lowerClouds,upperClouds;
+
     Texture playAgain;
 
     Texture[] life;
@@ -29,7 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
     int flapState;
     float birdY;
     float velocity;
-    float gravity = 2;
+    float gravity = 1.5f;
     Circle birdCircle;
 
     int score;
@@ -59,6 +61,9 @@ public class MyGdxGame extends ApplicationAdapter {
         background = new Texture("bg.png");
         //shapeRenderer = new ShapeRenderer();
 
+        lowerClouds = new Texture("lowerClouds.png");
+        upperClouds = new Texture("upperClouds.png");
+
         life = new Texture[maxLife];
         for (int i = 0; i < maxLife; i++) {
             life[i] = new Texture("life.png");
@@ -72,7 +77,7 @@ public class MyGdxGame extends ApplicationAdapter {
         birdCircle = new Circle();
 
         font = new BitmapFont();
-        font.setColor(Color.WHITE);
+        font.setColor(Color.GOLD);
         font.getData().setScale(10);
 
         topTube = new Texture("toptube.png");
@@ -96,6 +101,7 @@ public class MyGdxGame extends ApplicationAdapter {
         maxLife = 5;
         velocity = 0;
         birdY = 0;
+        gameState = 0;
         birdY = Gdx.graphics.getHeight() / 2 - birds[0].getHeight() / 2;
 
         for (int i = 0; i < numberOfTubes; i++) {
@@ -113,6 +119,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
         batch.begin();
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(upperClouds, 0, Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/5f ,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
 
         if (gameState == 1) {
 
@@ -148,6 +155,8 @@ public class MyGdxGame extends ApplicationAdapter {
                 batch.draw(topTube, tubeX[i], Gdx.graphics.getHeight() / 2 + gap / 2 + tubeOffset[i]);
                 batch.draw(bottomTube, tubeX[i], Gdx.graphics.getHeight() / 2 - gap / 2 - bottomTube.getHeight() + tubeOffset[i]);
 
+                batch.draw(upperClouds, 0, Gdx.graphics.getHeight()-Gdx.graphics.getHeight()/5f ,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+
                 topTubeRectangle[i] = new Rectangle(tubeX[i], Gdx.graphics.getHeight() / 2 + gap / 2 + tubeOffset[i], topTube.getWidth(),
                         topTube.getHeight());
                 bottomTubeRectangle[i] = new Rectangle(tubeX[i], Gdx.graphics.getHeight() / 2 - gap / 2 - bottomTube.getHeight() + tubeOffset[i],
@@ -162,6 +171,7 @@ public class MyGdxGame extends ApplicationAdapter {
                 space += 20 + life[i].getWidth();
             }
 
+            batch.draw(lowerClouds, 0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
 
             if (birdY > 0) {
 
@@ -199,8 +209,12 @@ public class MyGdxGame extends ApplicationAdapter {
         if (gameState == 0 || gameState == 2)
             batch.draw(playAgain, Gdx.graphics.getWidth() / 2 - playAgain.getWidth() / 4, Gdx.graphics.getHeight() / 4 - playAgain.getHeight() / 2
                     , playAgain.getWidth(), playAgain.getHeight());
-        if (gameState == 1 || gameState == 0)
+        if (gameState == 1 || gameState == 0) {
             batch.draw(birds[flapState], Gdx.graphics.getWidth() / 2 - birds[flapState].getWidth() / 2, birdY);
+        }
+
+        batch.draw(lowerClouds, 0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/5);
+
         if (gameState == 1)
             font.draw(batch, String.valueOf(score), 100, 200);
         else if (gameState == 2)
